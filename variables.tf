@@ -49,3 +49,9 @@ variable "k8s_namespace" {
   default     = "kube-system"
   description = "The k8s namespace in which the external-dns service account has been created"
 }
+
+#dependence variable binds all AWS resources allocated by
+#this module. Dependent modules reference this variable
+variable "mod_dependency" {
+  default = null
+}
