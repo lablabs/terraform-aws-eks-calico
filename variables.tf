@@ -37,7 +37,7 @@ variable "helm_release_name" {
 }
 
 variable "helm_repo_name" {
-  default = "stable"
+  default = "eks-stable"
 }
 
 variable "helm_repo_url" {
