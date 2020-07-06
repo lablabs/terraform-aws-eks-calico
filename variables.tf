@@ -1,4 +1,5 @@
 # calico
+
 variable "enabled" {
   type = bool
 }
@@ -24,6 +25,7 @@ variable "service_account_create" {
 }
 
 # Helm
+
 variable "helm_chart_name" {
   default = "aws-calico"
 }
@@ -45,13 +47,14 @@ variable "helm_repo_url" {
 }
 
 # K8S
+
 variable "k8s_namespace" {
   default     = "kube-system"
   description = "The k8s namespace in which the external-dns service account has been created"
 }
 
-#dependence variable binds all AWS resources allocated by
-#this module. Dependent modules reference this variable
+
 variable "mod_dependency" {
-  default = null
+  default     = null
+  description = "Dependence variable binds all AWS resources allocated by this module. Dependent modules reference this variable"
 }
