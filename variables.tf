@@ -6,8 +6,14 @@ variable "enabled" {
   nullable    = false
 }
 
-variable "kubernetes_provider" {
+variable "calico_kubernetes_provider" {
   type        = string
   default     = "EKS"
-  description = "Set your cloud provider name"
+  description = "Set your cloud provider name for Calico"
+}
+
+variable "calico_cni_type" {
+  type        = string
+  default     = "AmazonVPC"
+  description = "Set your cni type for Calico"
 }

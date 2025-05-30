@@ -18,14 +18,15 @@ locals {
     helm_repo_url      = "https://docs.trigera.io/calico/charts"
   }
 
-  addon_irsa = {
-    (local.addon.name) = {
-    }
-  }
-
   addon_values = yamlencode({
     installation = {
-      kubernetesProvider = var.kubernetes_provider
+      kubernetesProvider = var.calico_kubernetes_provider
+      cni = {
+        type = var.calico_cni_type
+      }
+      calicoNetwork = {
+        bgp = "Disabled"
+      }
     }
   })
 
