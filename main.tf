@@ -1,26 +1,39 @@
-data "helm_repository" "default" {
-  depends_on = [var.mod_dependency]
-  name       = var.helm_repo_name
-  url        = var.helm_repo_url
-}
+/**
+ * # AWS EKS Calico Addon Terraform module
+ *
+ * A Terraform module to deploy the [Calico](https://www.tigera.io/project-calico/) addon on Amazon EKS cluster.
+ *
+ * [![Terraform validate](https://github.com/lablabs/terraform-aws-eks-calico/actions/workflows/validate.yaml/badge.svg)](https://github.com/lablabs/terraform-aws-eks-calico/actions/workflows/validate.yaml)
+ * [![pre-commit](https://github.com/lablabs/terraform-aws-eks-calico/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/lablabs/terraform-aws-eks-calico/actions/workflows/pre-commit.yaml)
+ *
+ */
 
-resource "helm_release" "calico" {
-  depends_on = [var.mod_dependency]
-  count      = var.enabled ? 1 : 0
-  name       = var.helm_release_name
-  repository = data.helm_repository.default.metadata[0].name
-  chart      = var.helm_chart_name
-  namespace  = var.k8s_namespace
-  version    = var.helm_chart_version
+locals {
+  addon = {
+    name      = "calico"
+    namespace = "kube-system"
 
-  values = [
-    "${templatefile("${path.module}/templates/values.yaml.tpl",
-      {
-        "calico_version"         = var.calico_version,
-        "calico_image"           = var.calico_image,
-        "typha_image"            = var.typha_image,
-        "service_account_create" = var.service_account_create,
-      })
-    }"
-  ]
+    helm_chart_name    = "tigera-operator"
+    helm_chart_version = "3.29.4"
+    helm_repo_url      = "https://docs.tigera.io/calico/charts"
+  }
+
+  addon_irsa = {
+    (local.addon.name) = {}
+  }
+
+  addon_values = yamlencode({
+    installation = {
+      kubernetesProvider = var.calico_kubernetes_provider
+      managedCRDs        = true
+      cni = {
+        type = var.calico_cni_type
+      }
+      calicoNetwork = {
+        bgp = "Disabled"
+      }
+    }
+  })
+
+  addon_depends_on = []
 }
