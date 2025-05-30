@@ -15,12 +15,17 @@ locals {
 
     helm_chart_name    = "tigera-operator"
     helm_chart_version = "3.29.4"
-    helm_repo_url      = "https://docs.trigera.io/calico/charts"
+    helm_repo_url      = "https://docs.tigera.io/calico/charts"
+  }
+
+  addon_irsa = {
+    (local.addon.name) = {}
   }
 
   addon_values = yamlencode({
     installation = {
       kubernetesProvider = var.calico_kubernetes_provider
+      managedCRDs        = true
       cni = {
         type = var.calico_cni_type
       }
